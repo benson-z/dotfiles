@@ -1,0 +1,25 @@
+{
+  "title": "Launch Control Center Using \"f6\"",
+  "rules": [
+    {
+      "description": "Map f6 button to fn+c",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f6"
+          },
+          "to": [
+            {
+              "repeat": false,
+              "key_code": "c",
+              "modifiers": [
+                "fn"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
