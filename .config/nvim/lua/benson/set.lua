@@ -28,4 +28,3 @@ vim.opt.updatetime = 50
 
 vim.opt.mousescroll = "ver:1,hor:2"
 
--- vim.opt.colorcolumn = "80"
