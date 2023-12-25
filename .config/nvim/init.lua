@@ -1,2 +1,3 @@
 -- load benson config 
-require("benson")
+require("benson.core")
+require("benson.lazy")
