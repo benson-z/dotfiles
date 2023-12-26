@@ -1,7 +1,7 @@
 {
 	"height": 34,
 	"layer": "top",
-	"position": "top",
+	"position": "bottom",
 
 	"modules-left": [
 		"hyprland/workspaces"
@@ -10,8 +10,8 @@
 	],
 	"modules-right": [
         "network#wifi",
-        "battery",
         "pulseaudio",
+        "battery",
 		"clock",
         "custom/notification"
 	],
