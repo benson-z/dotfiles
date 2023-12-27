@@ -1,11 +1,11 @@
 return {
-    'nvim-telescope/telescope.nvim', 
+    'nvim-telescope/telescope.nvim',
     tag = '0.1.5',
     dependencies = {
-        "nvim-tree/nvim-web-devicons", 
+        "nvim-tree/nvim-web-devicons",
         'nvim-lua/plenary.nvim'
-    }, 
-    config = function() 
+    },
+    config = function()
         require('telescope').setup {
             defaults = {
                 -- themimg
@@ -21,24 +21,24 @@ return {
                         return math.min(max_lines, 45)
                     end,
 
-                    prompt_position = 'top', 
+                    prompt_position = 'top',
                     vertical = {
-                        mirror = true, 
+                        mirror = true,
                     },
 
                 },
                 path_display = function(opts, path)
                     local tail = require("telescope.utils").path_tail(path)
                     local win_width = vim.api.nvim_win_get_width(0) or 80
-                    local available_space = win_width - #tail - #path - 5 
+                    local available_space = win_width - #tail - #path - 5
 
                     local padding = available_space > 0 and available_space or 0
                     local aligned_path = string.rep(" ", padding) .. path
 
                     return string.format("%s%s", tail, aligned_path)
                 end,
-                file_ignore_patterns = { 
-                    "node_modules", 
+                file_ignore_patterns = {
+                    "node_modules",
                     "%.git/",
                 }
             },

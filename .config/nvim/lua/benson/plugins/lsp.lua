@@ -1,28 +1,34 @@
 return {
-    'VonHeikemen/lsp-zero.nvim', branch = 'v3.x', 
+    'VonHeikemen/lsp-zero.nvim',
+    branch = 'v3.x',
     dependencies = {
-        {'williamboman/mason.nvim'},
-        {'williamboman/mason-lspconfig.nvim'},
-        {'neovim/nvim-lspconfig'},
-        {'hrsh7th/cmp-nvim-lsp'},
-        {'hrsh7th/nvim-cmp'},
-        {'L3MON4D3/LuaSnip'},
-    }, 
-    config = function() 
+        { 'williamboman/mason.nvim' },
+        { 'williamboman/mason-lspconfig.nvim' },
+        { 'neovim/nvim-lspconfig' },
+        { 'hrsh7th/cmp-nvim-lsp' },
+        { 'hrsh7th/nvim-cmp' },
+        { 'L3MON4D3/LuaSnip' },
+    },
+    config = function()
         local lsp_zero = require('lsp-zero')
 
         lsp_zero.on_attach(function(client, bufnr)
-            local opts = {buffer = bufnr, remap = false}
+            lsp_zero.default_keymaps({ buffer = bufnr })
+            local opts = { buffer = bufnr, remap = false }
 
             vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
             vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-            vim.keymap.set("n", "<leader>b", function() vim.lsp.buf.references() end, opts)
+            vim.keymap.set("n", "<leader>b", "<cmd>Telescope lsp_references<CR>", opts)
             vim.keymap.set("n", "<leader>mv", function() vim.lsp.buf.rename() end, opts)
+            vim.keymap.set({ "n", "v" }, "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
+            vim.keymap.set({ 'n', 'x' }, '<leader>l', function()
+                vim.lsp.buf.format({ async = false, timeout_ms = 10000 })
+            end, opts)
         end)
 
         require('mason').setup({})
         require('mason-lspconfig').setup({
-            ensure_installed = {'rust_analyzer', 'jedi_language_server', 'jdtls'},
+            ensure_installed = { 'rust_analyzer', 'jedi_language_server' },
             handlers = {
                 lsp_zero.default_setup,
                 lua_ls = function()
@@ -33,7 +39,6 @@ return {
         })
 
         local cmp = require('cmp')
-        local cmp_select = {behavior = cmp.SelectBehavior.Select}
 
         cmp.setup({
             sorting = {
@@ -50,9 +55,9 @@ return {
                 }
             },
             sources = {
-                {name = 'path'},
-                {name = 'nvim_lsp'},
-                {name = 'nvim_lua'},
+                { name = 'path' },
+                { name = 'nvim_lsp' },
+                { name = 'nvim_lua' },
             },
             formatting = lsp_zero.cmp_format(),
             preselect = cmp.PreselectMode.Item,
@@ -60,8 +65,8 @@ return {
                 completeopt = 'menu,menuone,noinsert'
             },
             mapping = cmp.mapping.preset.insert({
-                ['<S-tab>'] = cmp.mapping.select_prev_item({behavior = 'select'}),
-                ['<tab>'] = cmp.mapping.select_next_item({behavior = 'select'}),
+                ['<S-tab>'] = cmp.mapping.select_prev_item({ behavior = 'select' }),
+                ['<tab>'] = cmp.mapping.select_next_item({ behavior = 'select' }),
                 ['<cr>'] = cmp.mapping.confirm({ select = true }),
             }),
         })
