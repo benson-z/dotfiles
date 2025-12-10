@@ -4,6 +4,7 @@ To apply these configs:
 
 ```sh
 stow benson
+stow -t ~/.config config
 ```
 
 ## TPM
