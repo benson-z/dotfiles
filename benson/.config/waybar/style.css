@@ -1,0 +1,52 @@
+@import "mocha.css";
+
+* {
+	font-size: 12px;
+	font-family: Jetbrains Mono NF, Font Awesome, sans-serif;
+    font-weight: bold;
+    color: @text;
+}
+
+window#waybar {
+	background-color: @base;
+}
+
+/* -----------------------------------------------------
+ * Tooltips
+ * ----------------------------------------------------- */
+tooltip {
+  background: #1a1b26;
+  border: 1px solid #7aa2f7;
+  border-radius: 10px;
+}
+
+tooltip label {
+  color: #c0caf5;
+}
+
+/* -----------------------------------------------------
+ * Window
+ * ----------------------------------------------------- */
+#clock {
+    margin: 0px 10px;
+}
+
+#battery {
+    margin: 0px 10px;
+}
+
+#network {
+    margin: 0px 10px;
+}
+
+#tray {
+    margin: 0px 5px;
+}
+
+#pulseaudio {
+    margin: 0px 10px;
+}
+
+#custom-notification {
+    margin: 0px 0px 0px 10px;
+}
