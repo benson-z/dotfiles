@@ -1,6 +1,6 @@
 return {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.8',
+    version = '*',
     dependencies = {
         "nvim-tree/nvim-web-devicons",
         'nvim-lua/plenary.nvim'
@@ -57,7 +57,7 @@ return {
         -- find in files
         vim.keymap.set('n', '<leader>f', builtin.live_grep, {})
         -- find help tags
-        vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+        -- vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
         -- find command
         vim.keymap.set('n', '<leader>p', builtin.commands, {})
     end
