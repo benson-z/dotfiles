@@ -1,45 +1,79 @@
 return {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x',
+    'neovim/nvim-lspconfig',
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
         { 'williamboman/mason.nvim' },
         { 'williamboman/mason-lspconfig.nvim' },
-        { 'neovim/nvim-lspconfig' },
         { 'hrsh7th/cmp-nvim-lsp' },
         { 'hrsh7th/nvim-cmp' },
-        { 'L3MON4D3/LuaSnip' },
     },
     config = function()
-        local lsp_zero = require('lsp-zero')
+        local mason = require('mason')
+        local mason_lspconfig = require('mason-lspconfig')
 
-        lsp_zero.on_attach(function(client, bufnr)
-            lsp_zero.default_keymaps({ buffer = bufnr })
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+        vim.diagnostic.config({
+            underline = true,
+            update_in_insert = false,
+            virtual_text = {
+                spacing = 4,
+                source = 'if_many',
+                prefix = '●',
+            },
+            severity_sort = true,
+            signs = true,
+        })
+
+        local on_attach = function(_, bufnr)
             local opts = { buffer = bufnr, remap = false }
 
-            vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-            vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-            vim.keymap.set("n", "<leader>b", "<cmd>Telescope lsp_references<CR>", opts)
-            vim.keymap.set("n", "<leader>mv", function() vim.lsp.buf.rename() end, opts)
-            vim.keymap.set({ "n", "v" }, "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
-            vim.keymap.set({ 'n', 'x' }, '<leader>l', function()
+            vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+            vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+            vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+            vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+            vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+            vim.keymap.set({ 'n', 'x' }, '<leader>cf', function()
                 vim.lsp.buf.format({ async = false, timeout_ms = 10000 })
             end, opts)
-        end)
+            vim.keymap.set("n", "<leader>cl", function()
+                vim.cmd("LspInfo")
+            end, opts)
+        end
 
-        require('mason').setup({})
-        require('mason-lspconfig').setup({
-            ensure_installed = { 'rust_analyzer', 'jedi_language_server', 'jdtls', 'clangd' },
-            handlers = {
-                lsp_zero.default_setup,
-                lua_ls = function()
-                    local lua_opts = lsp_zero.nvim_lua_ls()
-                    require('lspconfig').lua_ls.setup(lua_opts)
-                end,
-                jdtls = function()
-                    require('lspconfig').jdtls.setup({})
-                end
-            }
+        mason.setup({})
+        mason_lspconfig.setup({
+            ensure_installed = { 'rust_analyzer', 'jedi_language_server', 'jdtls', 'clangd', 'lua_ls' },
         })
+
+        local function setup_server(server_name, opts)
+            local config = vim.tbl_deep_extend('force', {
+                capabilities = capabilities,
+                on_attach = on_attach,
+            }, opts or {})
+
+            vim.lsp.config(server_name, config)
+        end
+
+        setup_server('rust_analyzer')
+        setup_server('jedi_language_server')
+        setup_server('clangd')
+        setup_server('lua_ls', {
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = { 'vim' },
+                    },
+                    workspace = {
+                        checkThirdParty = false,
+                    },
+                    completion = {
+                        callSnippet = 'Replace',
+                    },
+                },
+            },
+        })
+        setup_server('jdtls')
 
         local cmp = require('cmp')
 
@@ -62,7 +96,6 @@ return {
                 { name = 'nvim_lsp' },
                 { name = 'nvim_lua' },
             },
-            formatting = lsp_zero.cmp_format(),
             preselect = cmp.PreselectMode.Item,
             completion = {
                 completeopt = 'menu,menuone,noinsert'
