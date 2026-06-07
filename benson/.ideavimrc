@@ -1,3 +1,4 @@
+" Full actions list: https://gist.github.com/lexxish/6d629fa9b38581be3ece2a523879cfb7
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -9,5 +10,6 @@ map <leader>mv <Action>(RenameElement)
 map <leader>l <Action>(ReformatCode)
 map <leader>b <Action>(GotoDeclaration)
 map <leader>o <Action>(GotoFile)
+map <leader>p <Action>(GotoAction)
 map <leader>f <Action>(FindInPath)
 map <C-b>m <Action>(ActivateTerminalToolWindow)
